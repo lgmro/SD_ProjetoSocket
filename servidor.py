@@ -78,6 +78,40 @@ def operacoesVendedor(cliente):
         iniciarVendedorOuGerente("Vendedor", cliente)
 
 def operacoesGerente(cliente):
+    codigoOperacao = cliente.recv(1024).decode("utf-8")
+    if codigoOperacao == "OP002":
+        totalVendasVendedor(cliente)
+    elif codigoOperacao == "OP003":
+        totalVendasLoja(cliente)
+    elif codigoOperacao == "OP004":
+        totalVendasLojaPeriodo(cliente)
+    elif codigoOperacao == "OP005":
+        melhorVendedor(cliente)
+    elif codigoOperacao == "OP006":
+        melhorLoja(cliente)
+    else:
+        cliente.sendall("ERRO_OP".encode("utf-8"))
+        print("Esse código de operação não existe ou você não tem acesso ao mesmo. Tente outro por favor...")
+        iniciarVendedorOuGerente("Gerente", cliente)
+
+def totalVendasVendedor(cliente):
+    cliente.sendall("OK_OP".encode("utf-8"))
+    pass
+
+def totalVendasLoja(cliente):
+    cliente.sendall("OK_OP".encode("utf-8"))
+    pass
+
+def totalVendasLojaPeriodo(cliente):
+    cliente.sendall("OK_OP".encode("utf-8"))
+    pass
+
+def melhorVendedor(cliente):
+    cliente.sendall("OK_OP".encode("utf-8"))
+    pass
+
+def melhorLoja(cliente):
+    cliente.sendall("OK_OP".encode("utf-8"))
     pass
 
 main()
