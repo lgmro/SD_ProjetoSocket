@@ -1,6 +1,7 @@
 import socket
 import threading
 import datetime
+import pickle
 
 vendasRealizadas = []
 
@@ -26,7 +27,7 @@ def main():
         servidor.listen()
         print("\nServidor iniciado.")
     except:
-        print("\n Não foi possível iniciar o servidor")
+        print("\n Não foi possível iniciar o servidor.")
 
     i = 0
     while True:
@@ -39,46 +40,52 @@ def main():
 
 def iniciarVendedorOuGerente(tipoCliente, cliente):
     if tipoCliente == "Vendedor":
+        cliente.sendall("OK".encode("utf-8"))
+        print(f"\nCliente: {cliente} é um vendedor. Sua thread é: {threading.enumerate()}")
         operacoesVendedor(cliente)
-        print(f"Cliente: {cliente} é um vendedor. Sua thread é: {threading.enumerate()}")
     elif tipoCliente == "Gerente":
-        operacoesGerente(cliente)
-        print(f"Cliente: {cliente} é um gerente. Sua thread é: {threading.enumerate()}")
+        cliente.sendall("OK".encode("utf-8"))
+        print(f"\nCliente: {cliente} é um gerente. Sua thread é: {threading.enumerate()}")
+        operacoesGerente(cliente) 
     else:
-        print("Cliente não é um vendedor ou gerente.")
+        cliente.sendall("ERRO_IDENTIFICACAO".encode("utf-8"))
+        print("\nCliente não é um vendedor ou gerente.")
     
 def operacoesVendedor(cliente):
     global vendasRealizadas
-    codigoOperacao = cliente.recv(1024).decode("utf-8")
+    resposta = cliente.recv(4096)
+    loadResposta = pickle.loads(resposta)
+    codigoOperacao = loadResposta["operacao"]
     if codigoOperacao == "OP001":
-        cliente.sendall("OK_OP".encode("utf-8"))
         print(f"Cliente: {cliente} escolheu OP001.") 
         try:
-            nomeVendedor = cliente.recv(2048).decode("utf-8")
-            idLoja = cliente.recv(2048).decode("utf-8")
-            dataVenda = cliente.recv(2048).decode("utf-8")
+            nomeVendedor = loadResposta["nomeVendedor"]
+            idLoja = loadResposta["idLoja"]
+            dataVenda = loadResposta["dataOperacao"]
             formatarEmData = datetime.date(int(dataVenda[6:10]),int(dataVenda[3:5]),int(dataVenda[0:2]))
-            cliente.sendall("OK".encode("utf-8"))
-
-            valorVenda = float(cliente.recv(2048).decode("utf-8"))
-            cliente.sendall("OK".encode("utf-8"))
+            valorVenda = float(loadResposta["valorVenda"])
 
             vendasRealizadas.append(Venda(nomeVendedor, idLoja, formatarEmData, valorVenda))
+            cliente.sendall("OK".encode("utf-8"))
 
+            print(f"Inclusão de venda efetuada.") 
             for vendas in vendasRealizadas:
                 print(vendas.valoresObj())
-            iniciarVendedorOuGerente("Vendedor", cliente)
+
+            operacoesVendedor(cliente)
         except:
             print("Erro. Tente novamente")
-            cliente.sendall("Erro".encode("utf-8"))
-            iniciarVendedorOuGerente("Vendedor", cliente)
+            cliente.sendall("ERRO_DADOS".encode("utf-8"))
+            operacoesVendedor(cliente)
     else:
         cliente.sendall("ERRO_OP".encode("utf-8"))
-        print("Esse código de operação não existe ou você não tem acesso ao mesmo. Tente outro por favor...")
-        iniciarVendedorOuGerente("Vendedor", cliente)
+        print("Esse código de operação não existe ou você não tem acesso ao mesmo. Tente novamente por favor...")
+        operacoesVendedor(cliente)
 
 def operacoesGerente(cliente):
-    codigoOperacao = cliente.recv(1024).decode("utf-8")
+    resposta = cliente.recv(4096)
+    loadResposta = pickle.loads(resposta)
+    codigoOperacao = loadResposta["operacao"]
     if codigoOperacao == "OP002":
         totalVendasVendedor(cliente)
     elif codigoOperacao == "OP003":
@@ -95,23 +102,18 @@ def operacoesGerente(cliente):
         iniciarVendedorOuGerente("Gerente", cliente)
 
 def totalVendasVendedor(cliente):
-    cliente.sendall("OK_OP".encode("utf-8"))
     pass
 
 def totalVendasLoja(cliente):
-    cliente.sendall("OK_OP".encode("utf-8"))
     pass
 
 def totalVendasLojaPeriodo(cliente):
-    cliente.sendall("OK_OP".encode("utf-8"))
     pass
 
 def melhorVendedor(cliente):
-    cliente.sendall("OK_OP".encode("utf-8"))
     pass
 
 def melhorLoja(cliente):
-    cliente.sendall("OK_OP".encode("utf-8"))
     pass
 
 main()
