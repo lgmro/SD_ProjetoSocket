@@ -1,5 +1,6 @@
 import socket
 import threading
+import pickle
 
 def main():
 	HOST = 'localhost'    
@@ -7,67 +8,88 @@ def main():
 	cliente = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 	try:
 		cliente.connect((HOST,PORT))
-		print("\nCliente do tipo vendedor iniciado.")
+		print("\nIniciando cliente.")
 	except:
 		print("\nNão foi possível se conectar.")
 
 	cliente.sendall("Vendedor".encode("utf-8"))
+	resposta = cliente.recv(1024).decode("utf-8")
 
-	startCliente(cliente)
+	if resposta == "OK":
+		print("\nCliente do tipo vendedor iniciado.")
+		startCliente(cliente)
+	else:
+		print("Algo deu errado. Talvez você não tenha permissão para se conectar.")
+		cliente.close()
 
 def startCliente(cliente):
-	threadVendedor = threading.Thread(target=enviarEscolhaOperação, args=[cliente])
+	threadVendedor = threading.Thread(target=enviarVenda, args=[cliente])
 	threadVendedor.start()
 
-
-def enviarEscolhaOperação(cliente):
-	print("\nInforme o código da operação: ")
-	mensagem = input("\nCódigo > ")
-	cliente.sendall(mensagem.encode("utf-8"))
-	resposta = cliente.recv(1024).decode("utf-8")
-	if resposta == "OK_OP":
-		print("\nVocê escolheu a operação para cadastrar uma venda efetuada.")
-		enviarVenda(cliente)
-	elif resposta == "ERRO_OP":
-		print("\nParece que você não tem permissão para executar essa operação ou informou um código de operação inexistente. Tente novamente")
-		enviarEscolhaOperação(cliente)
-
 def enviarVenda(cliente):
+	print('''
+  	================================================
+  	Operações permitidas para esse usuário:
+    
+	| Código |              Ação                   |
+	|--------|-------------------------------------|
+  	| OP001  |       Informar uma venda            |
+  	| FIM    |       Encerrar o cliente            | 
+	------------------------------------------------
+	Obs.: Utilizar letras maiúsculas para os códigos.
+  	================================================
+  	''')
+	
 	try:
-		print("\nInforme o nome do vendedor: ")
-		mensagem = input("\nNome > ")
-		cliente.sendall(mensagem.encode("utf-8"))
+		print("\nInforme o código da operação: ")
+		operacao = input("\nCódigo > ")
 
-		print("\nInforme o código de id da loja: ")
-		mensagem = input("\nId > ")
-		cliente.sendall(mensagem.encode("utf-8"))
-		
-		print("\nInforma a data da operação (Por favor, use o formato DD/MM/AAAA. Ex.: 11/12/2019):")
-		mensagemData = input("\nData > ")
-		cliente.sendall(mensagemData.encode("utf-8"))
-		respostaData = cliente.recv(1024).decode("utf-8")
-		if respostaData == "Erro":
-			print("\nAlguma coisa deu errado. Talvez você tenha inserido um formato de data errado. Tente novamente")
-			enviarEscolhaOperação(cliente)
-		else:
+		if operacao != "FIM":
+			print("\nInforme o nome do vendedor: ")
+			nomeVendedor = input("\nNome > ")
+
+			print("\nInforme o código de id da loja: ")
+			idLoja = input("\nId > ")
+
+			print("\nInforma a data da operação (Por favor, use o formato DD/MM/AAAA. Ex.: 11/12/2019):")
+			dataOperacao = input("\nData > ")
+
+
 			print("\nInforme o valor da operação (Por favor, use somente número, para número decimais use o ponto ao invés da vírgula): ")
-			mensagemValor = input("\nValor > ")
-			cliente.sendall(mensagemValor.encode("utf-8"))
-			respostaOP = cliente.recv(1024).decode("utf-8")
-			if respostaOP == "Erro":
-				print("\nAlguma coisa deu errado. Talvez você tenha inserido letras no valor da operação. Tente novamente")
-				enviarEscolhaOperação(cliente)	
+			valorVenda = input("\nValor > ")
+			
+			informarVenda = {
+				"operacao": operacao,
+				"nomeVendedor": nomeVendedor,
+				"idLoja": idLoja,
+				"dataOperacao": dataOperacao,
+				"valorVenda": valorVenda
+			}
+
+			dados = pickle.dumps(informarVenda)
+
+			cliente.sendall(dados)
+
+			respostaServidor = cliente.recv(1024).decode("utf-8")
+
+			if respostaServidor == "OK":
+				print("\nOK. Venda cadastrada com sucesso. Vamos fazer outro cadastro? ")
+				enviarVenda(cliente)
+			elif respostaServidor == "ERRO_OP":
+				print("\nERRO. Esse código de operação não existe ou você não tem acesso ao mesmo. Tente novamente por favor...")
+				enviarVenda(cliente)
+			elif respostaServidor == "ERRO_DADOS":
+				print("\nERRO. Talvez você tenha inserido um formato de data errado ou inserido letras no valor. Tente novamente por favor...")
+				enviarVenda(cliente)
 			else:
-				if respostaOP == "OK":
-					print(respostaOP)
-					print("\nOK. Venda cadastrada com sucesso. Vamos fazer outro cadastro? ")
-					enviarEscolhaOperação(cliente)
-				else:
-					print(respostaOP)
-					print("\nAlguma coisa deu errado. Tente novamente")
-					enviarEscolhaOperação(cliente)
+				print("\nERRO. Tente novamente por favor...")
+				enviarVenda(cliente)
+		else:
+			print("Você escolheu encerrar o cliente.")
+			cliente.close()
+		
 	except:
-		print("Erro")
-		startCliente(cliente)
+		print("ERRO. Tente novamente por favor...")
+		enviarVenda(cliente)
 
 main()
