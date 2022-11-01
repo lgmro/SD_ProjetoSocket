@@ -53,12 +53,13 @@ def iniciarVendedorOuGerente(tipoCliente, cliente):
     
 def operacoesVendedor(cliente):
     global vendasRealizadas
-    resposta = cliente.recv(4096)
-    loadResposta = pickle.loads(resposta)
-    codigoOperacao = loadResposta["operacao"]
+    codigoOperacao = cliente.recv(1024).decode("utf-8")
     if codigoOperacao == "OP001":
         print(f"Cliente: {cliente} escolheu OP001.") 
+        cliente.sendall("OK_OP".encode("utf-8"))
         try:
+            respostaVenda = cliente.recv(4096)
+            loadResposta = pickle.loads(respostaVenda)
             nomeVendedor = loadResposta["nomeVendedor"]
             idLoja = loadResposta["idLoja"]
             dataVenda = loadResposta["dataOperacao"]
