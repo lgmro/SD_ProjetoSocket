@@ -84,9 +84,7 @@ def operacoesVendedor(cliente):
         operacoesVendedor(cliente)
 
 def operacoesGerente(cliente):
-    resposta = cliente.recv(4096)
-    loadResposta = pickle.loads(resposta)
-    codigoOperacao = loadResposta["operacao"]
+    codigoOperacao = cliente.recv(1024).decode("utf-8")
     if codigoOperacao == "OP002":
         totalVendasVendedor(cliente)
     elif codigoOperacao == "OP003":
@@ -109,7 +107,26 @@ def totalVendasLoja(cliente):
     pass
 
 def totalVendasLojaPeriodo(cliente):
-    pass
+    cliente.sendall("OK_OP".encode("utf-8"))
+    try:
+        resposta = cliente.recv(2048)
+        loadPeriodo = pickle.loads(resposta)
+        idLoja = loadPeriodo["idLoja"]
+        dataInicial = datetime.date(int(loadPeriodo["dataInicial"][6:10]),int(loadPeriodo["dataInicial"][3:5]),int(loadPeriodo["dataInicial"][0:2]))
+        dataFinal = datetime.date(int(loadPeriodo["dataFinal"][6:10]),int(loadPeriodo["dataFinal"][3:5]),int(loadPeriodo["dataFinal"][0:2]))
+        somaTotalValor = 0
+        contarVendas = 0
+        for vendas in vendasRealizadas:
+            if(vendas.idLoja == idLoja):
+                if(vendas.dataVenda >= dataInicial and vendas.dataVenda <= dataFinal):
+                    somaTotalValor += vendas.valorVenda
+                    contarVendas += 1
+
+        print(f"Soma: {somaTotalValor}, Total Vendas: {contarVendas}")
+        cliente.sendall(f"O valor total de vendas da loja nesse período foi: {somaTotalValor} e o total vendas realizadas foi: {contarVendas}".encode("utf-8"))
+    except:
+        cliente.sendall("ERRO".encode("utf-8"))
+        print(f"ERRO. Erro na operação.")
 
 def melhorVendedor(cliente):
     pass
