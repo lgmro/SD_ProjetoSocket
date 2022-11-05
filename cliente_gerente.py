@@ -66,10 +66,54 @@ def enviarConsulta(cliente):
 		enviarConsulta(cliente)
 
 def solicitarTotalVendasVendedor(cliente):
-    pass
+	try:
+		cliente.sendall("OP002".encode("utf-8"))
+		respostaServidorOP = cliente.recv(1024).decode("utf-8")
+		if respostaServidorOP == "OK_OP":
+			print("\nInforme o nome do vendedor para a consulta: ")
+			nomeVendedor = input("\nNome vendedor > ")
+
+			cliente.sendall(nomeVendedor.encode("utf-8"))
+			respostaServidor = cliente.recv(2048).decode("utf-8")
+
+			if respostaServidor == "ERRO":
+				print("\n ERRO. \n Aparetemente não existe vendedor com esse nome. Tente novamente por favor...")
+				enviarConsulta(cliente)
+			else:
+				print(f"\n{respostaServidor}")
+				print("\nOK. \nConsulta realizada com sucesso. Vamos fazer outra consulta? ")
+				enviarConsulta(cliente)
+		else:
+			print("\nERRO. \nInesperado. Tente Novamente...")
+			enviarConsulta(cliente)
+	except:
+		print("ERRO. \nTente novamente por favor...")
+		enviarConsulta(cliente)
 
 def solicitarTotalVendasLoja(cliente):
-    pass
+	try:
+		cliente.sendall("OP003".encode("utf-8"))
+		respostaServidorOP = cliente.recv(1024).decode("utf-8")
+		if respostaServidorOP == "OK_OP":
+			print("\nInforme o ID da loja para a consulta: ")
+			idLoja = input("\nID Loja > ")
+
+			cliente.sendall(idLoja.encode("utf-8"))
+			respostaServidor = cliente.recv(2048).decode("utf-8")
+
+			if respostaServidor == "ERRO":
+				print("\n ERRO. \n Aparetemente não existe loja com esse ID. Tente novamente por favor...")
+				enviarConsulta(cliente)
+			else:
+				print(f"\n{respostaServidor}")
+				print("\nOK. \nConsulta realizada com sucesso. Vamos fazer outra consulta? ")
+				enviarConsulta(cliente)
+		else:
+			print("\nERRO. \nInesperado. Tente Novamente...")
+			enviarConsulta(cliente)
+	except:
+		print("ERRO. \nTente novamente por favor...")
+		enviarConsulta(cliente)
     
 def solicitarTotalVendasLojaPeriodo(cliente):
 	try:
@@ -114,9 +158,35 @@ def solicitarTotalVendasLojaPeriodo(cliente):
 		enviarConsulta(cliente)
 
 def solicitarMelhorVendedor(cliente):
-    pass
+	try:
+		cliente.sendall("OP005".encode("utf-8"))
+		melhorVendedor = cliente.recv(1024).decode("utf-8")
+
+		if melhorVendedor == "ERRO":
+			print("\n ERRO. \n Tente novamente por favor...")
+			enviarConsulta(cliente)
+		else:
+			print(f"\n{melhorVendedor}")
+			print("\nOK. \nConsulta realizada com sucesso. Vamos fazer outra consulta? ")
+			enviarConsulta(cliente)
+	except:
+		print("ERRO. \nTente novamente por favor...")
+		enviarConsulta(cliente)
 
 def solicitarMelhorLoja(cliente):
-    pass
+	try:
+		cliente.sendall("OP006".encode("utf-8"))
+		melhorLoja = cliente.recv(1024).decode("utf-8")
+
+		if melhorLoja == "ERRO":
+			print("\n ERRO. \n Tente novamente por favor...")
+			enviarConsulta(cliente)
+		else:
+			print(f"\n{melhorLoja}")
+			print("\nOK. \nConsulta realizada com sucesso. Vamos fazer outra consulta? ")
+			enviarConsulta(cliente)
+	except:
+		print("ERRO. \nTente novamente por favor...")
+		enviarConsulta(cliente)
 
 main()
