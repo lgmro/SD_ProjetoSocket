@@ -30,9 +30,7 @@ def main():
     except:
         print("\n Não foi possível iniciar o servidor.")
 
-    i = 0
     while True:
-        i += 1
         cliente, enderecoCliente = servidor.accept()
         clientes.append(cliente)
         tipoCliente = cliente.recv(1024).decode("utf-8")
