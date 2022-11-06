@@ -105,7 +105,7 @@ def operacoesGerente(cliente, enderecoCliente):
             totalVendasLojaPeriodo(cliente, enderecoCliente)
         elif codigoOperacao == "OP005":
             print(f"Cliente gerente: {enderecoCliente} escolheu OP005.") 
-            melhorVendedor(cliente)
+            melhorVendedor(cliente, enderecoCliente)
         elif codigoOperacao == "OP006":
             print(f"Cliente gerente: {enderecoCliente} escolheu OP006.") 
             melhorLoja(cliente)
@@ -164,10 +164,33 @@ def totalVendasLojaPeriodo(cliente, enderecoCliente):
         print(f"ERRO. Erro na operação.")
         operacoesGerente(cliente, enderecoCliente)
 
-def melhorVendedor(cliente):
-    pass
+def melhorVendedor(cliente, enderecoCliente):
+    global vendasRealizadas
+    try:
+        vendedores = {}
+        for vendas in vendasRealizadas:
+            vendedor = vendas.nomeVendedor
+            somaVendedor = 0
+            for vend in vendasRealizadas:
+                if vend.nomeVendedor == vendedor:
+                    somaVendedor += vend.valorVenda
 
-def melhorLoja(cliente):
+            vendedores[vendedor] = somaVendedor
+            somaVendedor = 0
+
+        print(vendedores)
+        
+        melhorVendedor = max(vendedores, key = vendedores.get)
+        valorMelhorVendedor = vendedores[melhorVendedor]
+        print(f"Melhor Vendedor: {melhorVendedor} | Valor acumulado: {valorMelhorVendedor}")
+        cliente.sendall(f"--> O melhor vendedor foi: {melhorVendedor} e o valor total das vendas realizadas foi: R$ {valorMelhorVendedor}.".encode("utf-8"))
+        operacoesGerente(cliente, enderecoCliente)
+    except Exception as e:
+        cliente.sendall("ERRO".encode("utf-8"))
+        print(f"ERRO. Erro na operação. {e}")
+        operacoesGerente(cliente, enderecoCliente)
+
+def melhorLoja(cliente, enderecoCliente):
     pass
 
 def deleteCliente(cliente):
