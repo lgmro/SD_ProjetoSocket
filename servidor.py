@@ -179,12 +179,19 @@ def melhorVendedor(cliente, enderecoCliente):
             somaVendedor = 0
 
         print(vendedores)
-        
-        melhorVendedor = max(vendedores, key = vendedores.get)
-        valorMelhorVendedor = vendedores[melhorVendedor]
-        print(f"Melhor Vendedor: {melhorVendedor} | Valor acumulado: {valorMelhorVendedor}")
-        cliente.sendall(f"--> O melhor vendedor foi: {melhorVendedor} e o valor total das vendas realizadas foi: R$ {valorMelhorVendedor}.".encode("utf-8"))
-        operacoesGerente(cliente, enderecoCliente)
+        maiorValor = max(vendedores.values())
+        melhoresVendedores = []
+        for vend, valor in vendedores.items():
+            if valor == maiorValor:
+                melhoresVendedores.append(vend)
+
+        print(f"Melhor Vendedor(a): {melhoresVendedores} | Valor acumulado: {maiorValor}")
+
+        if len(melhoresVendedores) > 1:
+            cliente.sendall(f"--> Tivemos empate. Os melhores vendedores foram: {melhoresVendedores} e o valor total das vendas realizadas por cada um foi: R$ {maiorValor}.".encode("utf-8"))
+            operacoesGerente(cliente, enderecoCliente)
+        else:
+            cliente.sendall(f"--> O(A) melhor vendedor(a) foi: {melhoresVendedores[0]} e o valor total das vendas realizadas foi: R$ {maiorValor}.".encode("utf-8"))
     except Exception as e:
         cliente.sendall("ERRO".encode("utf-8"))
         print(f"ERRO. Erro na operação. {e}")
