@@ -163,7 +163,7 @@ def solicitarMelhorVendedor(cliente):
 		melhorVendedor = cliente.recv(1024).decode("utf-8")
 
 		if melhorVendedor == "ERRO":
-			print("\n ERRO. \n Tente novamente por favor...")
+			print("\n ERRO. \n Pode ser que não haja vendedor cadastrado ainda. Tente novamente por favor...")
 			enviarConsulta(cliente)
 		else:
 			print(f"\n{melhorVendedor}")
