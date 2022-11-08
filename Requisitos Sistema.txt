@@ -1,0 +1,3 @@
+- É necessário ter o Python 3 instalado. Usamos a versão 3.11.0.
+- Você pode usar um terminal para execucar a aplicação. Ex.: CMD, PowerShell, Shell 
+- Para o sistema operacional, pode-se usar o mac os, windows ou sistemas linux. Testamos no windows e no ubuntu.
