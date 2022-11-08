@@ -121,9 +121,6 @@ def solicitarTotalVendasLojaPeriodo(cliente):
 		respostaServidorOP = cliente.recv(1024).decode("utf-8")
 
 		if respostaServidorOP == "OK_OP":
-			print("\nInforme o ID da loja: ")
-			idLoja = input("\nID Loja > ")
-
 			print("\nInforme a data inicial do período (Por favor, use o formato DD/MM/AAAA. Ex.: 11/12/2019): ")
 			dataInicial = input("\nData Inicial > ")
 
@@ -131,7 +128,6 @@ def solicitarTotalVendasLojaPeriodo(cliente):
 			dataFinal = input("\nData Final > ")
 
 			buscarTotalVendas = {
-				"idLoja": idLoja,
 				"dataInicial": dataInicial,
 				"dataFinal": dataFinal
 			}
