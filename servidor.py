@@ -120,7 +120,28 @@ def operacoesGerente(cliente, enderecoCliente):
         return
 
 def totalVendasVendedor(cliente):
-    pass
+    try:
+        resposta = cliente.recv(2048)
+        nome = pickle.loads(nome)
+        
+        contadorVendas = 0
+        contadorValor = 0
+        
+        for venda in vendasRealizadas:
+            if  (venda.nomeVendedor == nome):
+                contadorVendas +=1
+                contadorValor += venda.valorVenda
+                contadorValor2 = sum(venda.valorVenda)
+
+        if (contadorVendas == 0):
+            cliente.sendall(f"Não foi encontrada nenhuma venda para {nome}".encode("utf-8"))
+
+        cliente.sendall(f"O total de vendas de {nome} foi de {contadorVendas}, o somatório de suas vendas foi de {contadorValor}".encode("utf-8"))
+        print(f"O total de vendas de {nome} foi de {contadorVendas}, o somatório de suas vendas foi de {contadorValor}")
+        operacoesGerente(cliente)
+    except:
+        cliente.sendall("ERRO".encode("utf-8"))
+        print(f"ERRO. Erro na operação.")
 
 def totalVendasLoja(cliente):
     pass
