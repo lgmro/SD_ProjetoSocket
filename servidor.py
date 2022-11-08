@@ -120,9 +120,10 @@ def operacoesGerente(cliente, enderecoCliente):
         return
 
 def totalVendasVendedor(cliente):
+    global vendasRealizadas
     try:
-        resposta = cliente.recv(2048)
-        nome = pickle.loads(nome)
+        cliente.sendall("OK_OP".encode("utf-8"))
+        nome = cliente.recv(2048).decode("utf-8")
         
         contadorVendas = 0
         contadorValor = 0
