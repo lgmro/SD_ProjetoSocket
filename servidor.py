@@ -99,7 +99,7 @@ def operacoesGerente(cliente, enderecoCliente):
             totalVendasVendedor(cliente)
         elif codigoOperacao == "OP003":
             print(f"Cliente gerente: {enderecoCliente} escolheu OP003.") 
-            totalVendasLoja(cliente)
+            totalVendasLoja(cliente, enderecoCliente)
         elif codigoOperacao == "OP004":
             print(f"Cliente gerente: {enderecoCliente} escolheu OP004.") 
             totalVendasLojaPeriodo(cliente, enderecoCliente)
@@ -122,8 +122,39 @@ def operacoesGerente(cliente, enderecoCliente):
 def totalVendasVendedor(cliente):
     pass
 
-def totalVendasLoja(cliente):
-    pass
+def totalVendasLoja(cliente, enderecoCliente):
+    global vendasRealizadas
+    try:
+        cliente.sendall("OK_OP".encode("utf-8"))
+        idLoja = cliente.recv(2048).decode("utf-8")
+
+        somaTotalValor = 0
+        contarVendas = 0
+
+        listaLojaFiltrada = list(filter(lambda vendas: vendas if vendas.idLoja == idLoja else None, vendasRealizadas))
+
+        for vendas in listaLojaFiltrada:
+            somaTotalValor += vendas.valorVenda
+
+        contarVendas = len(listaLojaFiltrada)
+
+        print("\n Lista filtrada: ")
+        for vendas in listaLojaFiltrada:
+            print(vendas)
+
+        if somaTotalValor == 0 and contarVendas == 0:
+            print("\n Não existe loja com esse ID ou vendas cadastradas para a mesma.")
+            cliente.sendall(f"--> Não existe loja com esse ID ou vendas cadastradas para a mesma.".encode("utf-8"))
+            operacoesGerente(cliente, enderecoCliente)
+            return
+
+        print(f"Soma: {somaTotalValor}, Total Vendas: {contarVendas}")
+        cliente.sendall(f"--> O valor total de vendas da loja [{idLoja}] foi: R$ {somaTotalValor} e o total de vendas realizadas por ela foi: {contarVendas}.".encode("utf-8"))
+        operacoesGerente(cliente, enderecoCliente)
+    except:
+        cliente.sendall("ERRO".encode("utf-8"))
+        print(f"ERRO. Erro na operação.")
+        operacoesGerente(cliente, enderecoCliente)
 
 def totalVendasLojaPeriodo(cliente, enderecoCliente):
     global vendasRealizadas
