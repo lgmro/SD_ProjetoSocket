@@ -96,7 +96,7 @@ def operacoesGerente(cliente, enderecoCliente):
         codigoOperacao = cliente.recv(1024).decode("utf-8")
         if codigoOperacao == "OP002":
             print(f"Cliente gerente: {enderecoCliente} escolheu OP002.") 
-            totalVendasVendedor(cliente)
+            totalVendasVendedor(cliente, enderecoCliente)
         elif codigoOperacao == "OP003":
             print(f"Cliente gerente: {enderecoCliente} escolheu OP003.") 
             totalVendasLoja(cliente)
@@ -119,7 +119,7 @@ def operacoesGerente(cliente, enderecoCliente):
         print(f"Quantidade de clientes conectados nesse servidor: {len(clientes)}.")
         return
 
-def totalVendasVendedor(cliente):
+def totalVendasVendedor(cliente, enderecoCliente):
     global vendasRealizadas
     try:
         cliente.sendall("OK_OP".encode("utf-8"))
@@ -132,17 +132,18 @@ def totalVendasVendedor(cliente):
             if  (venda.nomeVendedor == nome):
                 contadorVendas +=1
                 contadorValor += venda.valorVenda
-                contadorValor2 = sum(venda.valorVenda)
 
         if (contadorVendas == 0):
-            cliente.sendall(f"Não foi encontrada nenhuma venda para {nome}".encode("utf-8"))
+            cliente.sendall(f"\nNão foi encontrada nenhuma venda para {nome}.".encode("utf-8"))
+            operacoesGerente(cliente, enderecoCliente)
 
-        cliente.sendall(f"O total de vendas de {nome} foi de {contadorVendas}, o somatório de suas vendas foi de {contadorValor}".encode("utf-8"))
-        print(f"O total de vendas de {nome} foi de {contadorVendas}, o somatório de suas vendas foi de {contadorValor}")
-        operacoesGerente(cliente)
+        cliente.sendall(f"\nO total de vendas de {nome} foi de {contadorVendas}, o somatório de suas vendas foi de R$ {contadorValor}.".encode("utf-8"))
+        print(f"\nO total de vendas de {nome} foi de {contadorVendas}, o somatório de suas vendas foi de R$ {contadorValor}.")
+        operacoesGerente(cliente, enderecoCliente)
     except:
         cliente.sendall("ERRO".encode("utf-8"))
-        print(f"ERRO. Erro na operação.")
+        print(f"\nERRO. Erro na operação.")
+        operacoesGerente(cliente, enderecoCliente)
 
 def totalVendasLoja(cliente):
     pass
