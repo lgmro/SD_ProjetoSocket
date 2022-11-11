@@ -108,7 +108,7 @@ def operacoesGerente(cliente, enderecoCliente):
             melhorVendedor(cliente, enderecoCliente)
         elif codigoOperacao == "OP006":
             print(f"Cliente gerente: {enderecoCliente} escolheu OP006.") 
-            melhorLoja(cliente)
+            melhorLoja(cliente, enderecoCliente)
         else:
             cliente.sendall("ERRO_OP".encode("utf-8"))
             print("Esse código de operação não existe ou você não tem acesso ao mesmo. Tente outro por favor...")
@@ -163,14 +163,13 @@ def totalVendasLojaPeriodo(cliente, enderecoCliente):
         resposta = cliente.recv(2048)
 
         loadPeriodo = pickle.loads(resposta)
-        idLoja = loadPeriodo["idLoja"]
         dataInicial = datetime.date(int(loadPeriodo["dataInicial"][6:10]),int(loadPeriodo["dataInicial"][3:5]),int(loadPeriodo["dataInicial"][0:2]))
         dataFinal = datetime.date(int(loadPeriodo["dataFinal"][6:10]),int(loadPeriodo["dataFinal"][3:5]),int(loadPeriodo["dataFinal"][0:2]))
 
         somaTotalValor = 0
         contarVendas = 0
 
-        listaLojaFiltrada = list(filter(lambda vendas: vendas if vendas.idLoja == idLoja and vendas.dataVenda >= dataInicial and vendas.dataVenda <= dataFinal else None, vendasRealizadas))
+        listaLojaFiltrada = list(filter(lambda vendas: vendas if vendas.dataVenda >= dataInicial and vendas.dataVenda <= dataFinal else None, vendasRealizadas))
 
         for vendas in listaLojaFiltrada:
             somaTotalValor += vendas.valorVenda
@@ -182,13 +181,13 @@ def totalVendasLojaPeriodo(cliente, enderecoCliente):
             print(vendas)
 
         if somaTotalValor == 0 and contarVendas == 0:
-            print("\n Não existe loja com esse ID ou vendas cadastradas para a mesma nesse período.")
-            cliente.sendall(f"--> Não existe loja com esse ID ou vendas cadastradas para a mesma nesse período.".encode("utf-8"))
+            print("\n Não existe lojas com vendas cadastradas nesse período.")
+            cliente.sendall(f"--> Não existe lojas com vendas cadastradas nesse período.".encode("utf-8"))
             operacoesGerente(cliente, enderecoCliente)
             return
 
         print(f"Soma: {somaTotalValor}, Total Vendas: {contarVendas}")
-        cliente.sendall(f"--> O valor total de vendas da loja nesse período foi: R$ {somaTotalValor} e o total de vendas realizadas foi: {contarVendas}.".encode("utf-8"))
+        cliente.sendall(f"--> O valor total de vendas da rede de lojas nesse período foi: R$ {somaTotalValor} e o total de vendas realizadas foram: {contarVendas}.".encode("utf-8"))
         operacoesGerente(cliente, enderecoCliente)
     except:
         cliente.sendall("ERRO".encode("utf-8"))
@@ -223,13 +222,45 @@ def melhorVendedor(cliente, enderecoCliente):
             operacoesGerente(cliente, enderecoCliente)
         else:
             cliente.sendall(f"--> O(A) melhor vendedor(a) foi: {melhoresVendedores[0]} e o valor total das vendas realizadas foi: R$ {maiorValor}.".encode("utf-8"))
+            operacoesGerente(cliente, enderecoCliente)
     except Exception as e:
         cliente.sendall("ERRO".encode("utf-8"))
         print(f"ERRO. Erro na operação. {e}")
         operacoesGerente(cliente, enderecoCliente)
 
 def melhorLoja(cliente, enderecoCliente):
-    pass
+    global vendasRealizadas
+    try:
+        lojas = {}
+        for vendas in vendasRealizadas:
+            loja = vendas.idLoja
+            somaLoja = 0
+            for venda in vendasRealizadas:
+                if venda.idLoja == loja:
+                    somaLoja += venda.valorVenda
+
+            lojas[loja] = somaLoja
+            somaLoja = 0
+
+        print(lojas)
+        maiorValor = max(lojas.values())
+        melhoresLojas = []
+        for venda, valor in lojas.items():
+            if valor == maiorValor:
+                melhoresLojas.append(venda)
+
+        print(f"Melhor loja: {melhoresLojas} | Valor acumulado: {maiorValor}")
+
+        if len(melhoresLojas) > 1:
+            cliente.sendall(f"--> Tivemos empate. As melhores lojas foram: {melhoresLojas} e o valor total das vendas realizadas por cada uma foi: R$ {maiorValor}.".encode("utf-8"))
+            operacoesGerente(cliente, enderecoCliente)
+        else:
+            cliente.sendall(f"--> A melhor loja foi: {melhoresLojas[0]} e o valor total das vendas realizadas foi: R$ {maiorValor}.".encode("utf-8"))
+            operacoesGerente(cliente, enderecoCliente)
+    except Exception as e:
+        cliente.sendall("ERRO".encode("utf-8"))
+        print(f"ERRO. Erro na operação. {e}")
+        operacoesGerente(cliente, enderecoCliente)
 
 def deleteCliente(cliente):
     clientes.remove(cliente)
