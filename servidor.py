@@ -96,7 +96,7 @@ def operacoesGerente(cliente, enderecoCliente):
         codigoOperacao = cliente.recv(1024).decode("utf-8")
         if codigoOperacao == "OP002":
             print(f"Cliente gerente: {enderecoCliente} escolheu OP002.") 
-            totalVendasVendedor(cliente)
+            totalVendasVendedor(cliente, enderecoCliente)
         elif codigoOperacao == "OP003":
             print(f"Cliente gerente: {enderecoCliente} escolheu OP003.") 
             totalVendasLoja(cliente, enderecoCliente)
@@ -119,8 +119,31 @@ def operacoesGerente(cliente, enderecoCliente):
         print(f"Quantidade de clientes conectados nesse servidor: {len(clientes)}.")
         return
 
-def totalVendasVendedor(cliente):
-    pass
+def totalVendasVendedor(cliente, enderecoCliente):
+    global vendasRealizadas
+    try:
+        cliente.sendall("OK_OP".encode("utf-8"))
+        nome = cliente.recv(2048).decode("utf-8")
+        
+        contadorVendas = 0
+        contadorValor = 0
+        
+        for venda in vendasRealizadas:
+            if  (venda.nomeVendedor == nome):
+                contadorVendas +=1
+                contadorValor += venda.valorVenda
+
+        if (contadorVendas == 0):
+            cliente.sendall(f"\nNão foi encontrada nenhuma venda para {nome}.".encode("utf-8"))
+            operacoesGerente(cliente, enderecoCliente)
+
+        cliente.sendall(f"\nO total de vendas de {nome} foi de {contadorVendas}, o somatório de suas vendas foi de R$ {contadorValor}.".encode("utf-8"))
+        print(f"\nO total de vendas de {nome} foi de {contadorVendas}, o somatório de suas vendas foi de R$ {contadorValor}.")
+        operacoesGerente(cliente, enderecoCliente)
+    except:
+        cliente.sendall("ERRO".encode("utf-8"))
+        print(f"\nERRO. Erro na operação.")
+        operacoesGerente(cliente, enderecoCliente)
 
 def totalVendasLoja(cliente, enderecoCliente):
     global vendasRealizadas
