@@ -2,6 +2,7 @@
 
 ## Integrantes:
 #### Adilson Lucas Nogueira Almeida - RA: 1272117609;
+#### Gustavo Rafael Vieira Goes - RA: 1272117750;
 #### Lucas Gabriel Maciel Marinho - RA: 1272115763;
 #### Lucas Nery Moreno - RA: 1272121356;
 #### Marina Fernandes Porto Leite - RA: 1272121593;
