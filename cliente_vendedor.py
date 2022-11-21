@@ -44,7 +44,15 @@ def enviarVenda(cliente):
 		print("\nInforme o código da operação: ")
 		operacao = input("\nCódigo > ")
 
-		if operacao != "FIM":
+		if operacao == "FIM":
+			print("Você escolheu encerrar o cliente.")
+			cliente.close()
+			return
+
+		cliente.sendall(operacao.encode("utf-8"))
+		respostaServidorOP = cliente.recv(1024).decode("utf-8")
+		
+		if respostaServidorOP == "OK_OP":
 			print("\nInforme o nome do vendedor: ")
 			nomeVendedor = input("\nNome > ")
 
@@ -59,7 +67,6 @@ def enviarVenda(cliente):
 			valorVenda = input("\nValor > ")
 			
 			informarVenda = {
-				"operacao": operacao,
 				"nomeVendedor": nomeVendedor,
 				"idLoja": idLoja,
 				"dataOperacao": dataOperacao,
@@ -75,19 +82,19 @@ def enviarVenda(cliente):
 			if respostaServidor == "OK":
 				print("\nOK. Venda cadastrada com sucesso. Vamos fazer outro cadastro? ")
 				enviarVenda(cliente)
-			elif respostaServidor == "ERRO_OP":
-				print("\nERRO. Esse código de operação não existe ou você não tem acesso ao mesmo. Tente novamente por favor...")
-				enviarVenda(cliente)
 			elif respostaServidor == "ERRO_DADOS":
 				print("\nERRO. Talvez você tenha inserido um formato de data errado ou inserido letras no valor. Tente novamente por favor...")
 				enviarVenda(cliente)
 			else:
 				print("\nERRO. Tente novamente por favor...")
 				enviarVenda(cliente)
-		else:
-			print("Você escolheu encerrar o cliente.")
-			cliente.close()
 		
+		elif respostaServidorOP == "ERRO_OP":
+			print("\nERRO. Esse código de operação não existe ou você não tem acesso ao mesmo. Tente novamente por favor...")
+			enviarVenda(cliente)
+		else:
+			print("\nERRO. Inesperado.... Tente Novamente")
+			enviarVenda(cliente)
 	except:
 		print("ERRO. Tente novamente por favor...")
 		enviarVenda(cliente)
