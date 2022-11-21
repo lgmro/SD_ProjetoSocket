@@ -29,4 +29,4 @@
 #### 5 - Você verá que o terminal do servidor irá informar cada vez que um cliente se conectar, além do próprio cliente informar se ele conseguiu se conectar ou não.
 #### 6 - Agora você tem as aplicações funcionando, pode executar as operações no cliente do vendedor e do gerente. 
 
-#### Importante: Nosso sistema é Case-sensitive, isto é, o aplicativo distingue letras maiúsculas e de minúsculas. Ex.: A palavra "Maria" é diferente da palavra "maria".
+#### Importante: Nosso sistema é Case-sensitive, isto é, o aplicativo distingue letras maiúsculas de minúsculas. Ex.: A palavra "Maria" é diferente da palavra "maria".
