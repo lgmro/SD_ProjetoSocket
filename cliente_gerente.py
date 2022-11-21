@@ -35,7 +35,7 @@ def enviarConsulta(cliente):
 	|--------|----------------------------------------------|
   	| OP002  |    Consultar total de vendas vendedor        | 
 	| OP003  |      Consultar total de vendas loja          | 
-	| OP004  |  Consultar total de vendas loja por período  | 
+	| OP004  | Consultar total de vendas lojas por período  | 
 	| OP005  |             Melhor vendedor                  | 
 	| OP006  |               Melhor loja                    | 
   	| FIM    |           Encerrar o cliente                 | 
