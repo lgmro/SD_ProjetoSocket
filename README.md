@@ -20,7 +20,7 @@
 #### 1 - Baixe a pasta do projeto pelo GitHub ou clone o projeto com o git clone. A versão mais atualizada está disponível na branch main;
 #### 2 - Caso você for usar a mesma máquina para executar os três códigos-fonte, não precisa realizar nenhuma alteração HOST(IP). Caso for máquinas diferente, substitua a string "localhost" dos códigos-fontes para o IP apropriado da máquina que você irá usar, lembre-se que os IP's dos clientes devem ser o mesmo do servidor;
     Alguns comando que você pode usar para descobrir seu ip: ipconfig (Windows) e ifconfig(Ubuntu).
-#### 3 - Executando a aplicação na mesma máquina, você só precisar abrir três terminais na pasta do projeto onde está localizado os códigos fontes (esse detalhe é importate) e execute o código-fonte do "server.py" em um dos terminais primeiro. Segue abaixo alguns comandos que utilizamos, mas aconselhamos pesquisar o qual a sua máquina utiliza: 
+#### 3 - Executando a aplicação na mesma máquina, você só precisar abrir três terminais na pasta do projeto onde está localizado os códigos fontes (esse detalhe é importate) e execute o código-fonte do "servidor.py" em um dos terminais primeiro. Segue abaixo alguns comandos que utilizamos, mas aconselhamos pesquisar o qual a sua máquina utiliza: 
     python servidor.py (Windows), py servidor.py (Windows) ou python3 servidor.py (Ubuntu);
 #### 4 - Execute os clientes vendedor e gerente, seguindo o exemplo que você utilizou para executar o servidor, substituindo o nome do arquivo para o desejado. 
     Exemplos cliente vendedor:  python cliente_vendedor.py (Windows), py cliente_vendedor.py (Windows) ou python3 cliente_vendedor.py (Ubuntu);
