@@ -81,3 +81,5 @@
     <img src= "https://user-images.githubusercontent.com/84135761/203665349-1922aaaa-943c-46aa-9543-524ce33ba067.png" width = "800px"/>
 </div>
 
+#### Obs.: Para finalizar o servidor, você pode usar o comando "CTRL + C". Lembre-se de finalizar o cliente do vendedor e do gerente primeiro.
+
