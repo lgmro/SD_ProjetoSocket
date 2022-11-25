@@ -1,3 +1,9 @@
-- É necessário ter o Python 3 instalado. Usamos a versão 3.11.0.
-- Você pode usar um terminal para execucar a aplicação. Ex.: CMD, PowerShell, Shell 
-- Para o sistema operacional, pode-se usar o mac os, windows ou sistemas linux. Testamos no windows e no ubuntu.
+1 - É necessário ter o Python 3 instalado. Testamos nas versões 3.10.6 e 3.11.0;
+  1.1 - Para instalar o python de acordo com seu SO acesse: https://www.python.org/downloads/
+  
+2 - Caso você queira visualizar melhor o código, será necessário uma IDE, recomendamos usar Visual Studio Code;
+  2.1 - Para instalar o VSCode acesse: https://code.visualstudio.com/
+  
+3 - Você pode usar um terminal para execucar a aplicação. Ex.: CMD, PowerShell, Shell;
+
+4 - Para o sistema operacional, pode-se usar o macOs, windows ou sistemas linux. Testamos no windows e no ubuntu.
