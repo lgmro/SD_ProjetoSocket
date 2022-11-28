@@ -31,7 +31,7 @@
 
 #### Importante: Nosso sistema é Case-sensitive, isto é, o aplicativo distingue letras maiúsculas de minúsculas. Ex.: A palavra "Maria" é diferente da palavra "maria".
 
-## Tutorial de uso das aplicações:
+## Tutorial de uso das aplicações com imagens:
 #### 1 - Vamos executar o servidor.py; 
 
 <div align = "center">
@@ -68,15 +68,15 @@
 <div align = "center">
     <img src= "https://user-images.githubusercontent.com/84135761/203663471-b06c1e7c-df87-47a1-960f-f4987a14e16f.png" width = "800px"/>
 </div>
-4.5 - OP005: Faz uma consulta e informar o nome do vendedor que mais vendeu (aquele que tem o maior valor acumulado de vendas) entre as vendas cadastradas. Nosso exemplo foi a Maria com total acumulado de R$ 1201.00:
+4.4 - OP005: Faz uma consulta e informar o nome do vendedor que mais vendeu (aquele que tem o maior valor acumulado de vendas) entre as vendas cadastradas. Nosso exemplo foi a Maria com total acumulado de R$ 1201.00:
 <div align = "center">
     <img src= "https://user-images.githubusercontent.com/84135761/203663470-515c082a-17f8-4eeb-bfc3-b7d0ef178b31.png" width = "800px"/>
 </div>
-4.6 - OP006: Faz uma consulta e informar o ID da loja que mais vendeu (aquela que tem o maior valor acumulado de vendas) entre as vendas cadastradas. Nosso exemplo foi a LOJA90 com um total acumulado de R$ 1800.50:
+4.5 - OP006: Faz uma consulta e informar o ID da loja que mais vendeu (aquela que tem o maior valor acumulado de vendas) entre as vendas cadastradas. Nosso exemplo foi a LOJA90 com um total acumulado de R$ 1800.50:
 <div align = "center">
     <img src= "https://user-images.githubusercontent.com/84135761/203663468-f4184619-0353-4332-96f9-00e34452a531.png" width = "800px"/>
 </div>
-4.7 - FIM: Finaliza a aplicação do gerente:
+4.6 - FIM: Finaliza a aplicação do gerente:
 <div align = "center">
     <img src= "https://user-images.githubusercontent.com/84135761/203665349-1922aaaa-943c-46aa-9543-524ce33ba067.png" width = "800px"/>
 </div>
